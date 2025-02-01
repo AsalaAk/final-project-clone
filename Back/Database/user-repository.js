@@ -44,12 +44,11 @@ const getUserByEmailStoredProcedure = async (email) => {
     try {
         const result = await appPool.request()
             .input('email', mssql.NVarChar(100), email)
-            .execute('spGetUserByEmail'); // Stored procedure to fetch user by email
+            .execute('spGetUserByEmail');
 
-        console.log("Stored procedure result:", result.recordset); // Add this line
-        return result.recordset[0]; // Return the user object (or undefined if not found)
+        return result.recordset[0]; // Ensure this returns { id, email, hashed_password }
     } catch (error) {
-        console.error("Error executing stored procedure for login:", error);
+        console.error("Error executing spGetUserByEmail:", error);
         throw error;
     }
 };
@@ -96,13 +95,15 @@ const getPersonByIdStoredProcedure = async (id) => {
     try {
         const result = await pool.request()
             .input('id', mssql.Int, id)
-            .execute('spGetPersonById'); // Call the stored procedure
-        return result.recordset[0]; // Return the single person object
+            .query("SELECT id, fname, lname, email, gender, ezor, cardDescription FROM registrars WHERE id = @id");
+
+        return result.recordset[0]; // Return the first matching user
     } catch (error) {
-        console.error('Error executing spGetPersonById:', error);
+        console.error("Error fetching user by ID:", error);
         throw error;
     }
 };
+
 module.exports.getPersonByIdStoredProcedure = getPersonByIdStoredProcedure;
 
 
@@ -125,21 +126,32 @@ module.exports.getUserProfileStoredProcedure = getUserProfileStoredProcedure;
 
 //==========================Update User Info=============================
 
-const updateUserProfileStoredProcedure = async (userInfo) => {
-    const { id, fname, lname, gender, ezor, cardDescription, phone } = userInfo;
+const updateUserProfileStoredProcedure = async (id, updates) => {
     const pool = await connectionToDB.appPool.connect();
     try {
-        await pool.request()
-            .input('id', mssql.Int, id)
-            .input('fname', mssql.NVarChar(255), fname)
-            .input('lname', mssql.NVarChar(255), lname)
-            .input('gender', mssql.NVarChar(10), gender)
-            .input('ezor', mssql.NVarChar(255), ezor)
-            .input('cardDescription', mssql.NVarChar(500), cardDescription)
-            .input('phone', mssql.NVarChar(255), phone)
-            .execute('spUpdateUserProfile');
+        let query = "UPDATE registrars SET ";
+        let params = [];
+        let index = 1;
+
+        for (const key in updates) {
+            if (updates[key] !== null && updates[key] !== undefined) {
+                query += `${key} = @param${index}, `;
+                params.push({ name: `param${index}`, type: mssql.NVarChar, value: updates[key] });
+                index++;
+            }
+        }
+
+        query = query.slice(0, -2); // Remove last comma
+        query += " WHERE id = @userId";
+
+        let request = pool.request();
+        request.input("userId", mssql.Int, id);
+        params.forEach(param => request.input(param.name, param.type, param.value));
+
+        const result = await request.query(query);
+        return result;
     } catch (error) {
-        console.error('Error executing spUpdateUserProfile:', error);
+        console.error("Error updating user profile:", error);
         throw error;
     }
 };

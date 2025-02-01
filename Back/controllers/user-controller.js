@@ -57,7 +57,7 @@ module.exports.registerNewUser = registerNewUser;
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log("Login attempt:", { email, password });
+        console.log("Login attempt for:", { email, password });
 
         // Call the repository to execute the stored procedure
         const user = await usersRepository.getUserByEmailStoredProcedure(email);
@@ -68,13 +68,8 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password." });
         }
 
-        console.log("Fetched user object:", user);
-        console.log("User hashed_password:", user.hashed_password);
-
-        // Use the correct property name for the hashed password
+        // Compare hashed password
         const isPasswordValid = await bcrypt.compare(password, user.hashed_password);
-        console.log("Password match result:", isPasswordValid);
-
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid email or password." });
         }
@@ -83,14 +78,15 @@ const loginUser = async (req, res) => {
         const token = jwt.sign(
             { id: user.id, email: user.Email }, // Ensure user.id exists
             process.env.JWT_SECRET_KEY,             // Secret key
-            { expiresIn: '1h' }                 // Expiration
+            { expiresIn: '5h' }                 // Expiration
         );
 
-        console.log("Login successful for user:", user.Email);
-        res.status(200).json({ message: "Login successful!", token });
+        console.log("Login successful for user:", user.Email, user.id);
+
+        res.status(200).json({ message: "Login successful!", token, id: user.id });
     } catch (error) {
         console.error("Error logging in user:", error);
-        res.status(500).json({ message: "Failed to log in user." });
+        res.status(500).json({ message: "Login failed." });
     }
 };
 
@@ -143,23 +139,24 @@ module.exports.getPersonById = getPersonById;
 
 //==========================Get User Profile By Id=============================
 const getUserProfile = async (req, res) => {
+    const { id } = req.params;
+
+    // Ensure user ID from token matches the requested profile ID
+    if (req.user.id != id) {
+        return res.status(403).json({ message: "Access Denied: Unauthorized to access this profile." });
+    }
+
     try {
-        const { id } = req.params;
-
-        // Verify user can only access their profile
-        if (parseInt(id) !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied.' });
-        }
-
         const profile = await usersRepository.getUserProfileStoredProcedure(id);
+
         if (!profile) {
-            return res.status(404).json({ message: 'Profile not found.' });
+            return res.status(404).json({ message: "profile not found." });
         }
 
         res.status(200).json(profile);
     } catch (error) {
-        console.error('Error fetching profile:', error);
-        res.status(500).json({ message: 'Failed to fetch profile.' });
+        console.error("Error fetching profile profile:", error);
+        res.status(500).json({ message: "Failed to fetch profile data." });
     }
 };
 
@@ -168,22 +165,28 @@ module.exports.getUserProfile = getUserProfile;
 //==========================Update User Info=============================
 
 const updateUserProfile = async (req, res) => {
-    try {
-        const { id } = req.body;
+    const { id } = req.params;  // Extract `id` from the URL
+    const updates = req.body;    // Data sent from frontend
 
-        // Verify user can only update their profile
-        if (parseInt(id) !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied.' });
+    console.log("Updating user ID:", id, "with data:", updates);
+
+    if (!id) {
+        return res.status(400).json({ message: "User ID is required." });
+    }
+
+    try {
+        const result = await usersRepository.updateUserProfileStoredProcedure(id, updates);
+
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ message: "User not found or no changes made." });
         }
 
-        await usersRepository.updateUserProfileStoredProcedure(req.body);
-        res.status(200).json({ message: 'Profile updated successfully.' });
+        res.status(200).json({ message: "Profile updated successfully." });
     } catch (error) {
-        console.error('Error updating profile:', error);
-        res.status(500).json({ message: 'Failed to update profile.' });
+        console.error("Error updating profile:", error);
+        res.status(500).json({ message: "Failed to update profile." });
     }
 };
-
 module.exports.updateUserProfile = updateUserProfile;
 
 

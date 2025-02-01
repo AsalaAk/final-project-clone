@@ -17,7 +17,8 @@ router.get('/persons', usersController.getAllUsers);
 router.get('/ezors', usersController.getUniqueEzors);
 router.get('/person/:id', usersController.getPersonById);
 router.get('/profile/:id', authenticateUser, usersController.getUserProfile);
-router.put('/update', authenticateUser, usersController.updateUserProfile);
+router.put('/profile/:id', authenticateUser, usersController.updateUserProfile);
+
 
 
 module.exports = router;

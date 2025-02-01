@@ -1,4 +1,4 @@
-
+USE ProfessionalsWebDB;
 -------------------------Register User-------------------------
 
 CREATE PROCEDURE [dbo].[spRegisterUser]
@@ -32,10 +32,10 @@ EXEC [dbo].[spRegisterUser]
    @gender = 'Male',
    @cardDescription = 'Short description',
    @ezor = 'Region 1',
-   @hashed_password = 'hashedpassword123';
-
--------------------------Check if User Exists-------------------------
+   @hashed_password = 'hashedpassword123'
 GO
+-------------------------Check if User Exists-------------------------
+
 CREATE PROCEDURE [dbo].[CheckIfUserExists]
 @Email NVARCHAR(100)
 AS
@@ -44,24 +44,25 @@ BEGIN
 END;
 GO
 
--------------------------GET User By Email-------------------------
+-------------------------GET User By Email for Login-------------------------
 
 CREATE PROCEDURE [dbo].[spGetUserByEmail]
 @Email NVARCHAR(100)
 AS
 BEGIN
-    -- Fetch email and hashed password for login validation
-    SELECT Email, hashed_password
+    SET NOCOUNT ON;
+
+    -- Fetch id, email, and hashed password for login validation
+    SELECT id, email, hashed_password
     FROM registrars
-    WHERE Email = @Email;
-END;
-GO
+    WHERE email = @Email;
+END
 
 
 EXEC [dbo].[spGetUserByEmail] 
-   @Email = 'john@example.com';
+   @Email = 'test@gmail.com';
 
-
+-- DROP PROCEDURE [dbo].[spGetUserByEmail];
 -------------------------GET All Users-------------------------
 
 CREATE PROCEDURE [dbo].[spGetAllUsers]

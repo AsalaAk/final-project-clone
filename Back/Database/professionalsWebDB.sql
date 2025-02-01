@@ -20,11 +20,11 @@ CREATE TABLE registrars(
     isActive BIT DEFAULT 1
 );
 
-ALTER TABLE registrars
-ADD isActive BIT DEFAULT 1; -- Default value is 1 (active)
+-- ALTER TABLE registrars
+-- ADD isActive BIT DEFAULT 1; -- Default value is 1 (active)
 
 CREATE UNIQUE INDEX idx_email ON registrars(email);
-DROP TABLE registrars;
+-- DROP TABLE registrars;
 
 
 
