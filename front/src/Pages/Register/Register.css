@@ -1,0 +1,39 @@
+.formParent {
+    padding-top: 20px;
+}
+
+.labelStyling {
+    padding-left: 10px;
+
+}
+
+.formChildren {
+    padding: 5px;
+
+}
+
+.submitButton {
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.specializations-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #f1f1f1;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    cursor: pointer;
+}

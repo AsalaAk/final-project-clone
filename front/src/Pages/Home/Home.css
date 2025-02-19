@@ -1,0 +1,120 @@
+.home-container {
+    width: 100%;
+    text-align: center;
+    direction: rtl;
+    /* Hebrew text should be right-to-left */
+}
+
+/* Banner */
+.banner {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    background-image: url("headbanner.jpg");
+    background-size: cover;
+    background-position: right;
+    display: flex;
+    align-items: right;
+    justify-content: right;
+}
+
+.banner-content {
+    text-align: right;
+    /* background: rgba(0, 0, 0, 0.5); */
+    padding: 30px;
+    border-radius: 10px;
+    color: white;
+    max-width: 600px;
+}
+
+.banner-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.banner-content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.banner-content button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.banner-content button:hover {
+    background-color: #0056b3;
+}
+
+/* Sections */
+.about-us,
+.how-it-works,
+.testimonials {
+    padding: 50px 20px;
+    background-color: #f8f9fa;
+}
+
+.about-us h2,
+.how-it-works h2,
+.testimonials h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.about-us p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Steps Section */
+.steps {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.step {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+}
+
+.step h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.step p {
+    font-size: 1.1rem;
+}
+
+/* Testimonials Section */
+.testimonial {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.testimonial p {
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+.testimonial h4 {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 10px;
+}
