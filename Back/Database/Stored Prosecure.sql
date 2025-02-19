@@ -166,3 +166,30 @@ BEGIN
 END;
 
 -- DROP PROCEDURE [dbo].[spUpdateUserInfo];
+
+-------------------------Get Specializations-------------------------
+
+CREATE PROCEDURE spGetSpecializations
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT id, specialization_name FROM specializations;
+END;
+
+EXEC spGetSpecializations;
+
+-------------------------Assign Specializations To Registrar-------------------------
+CREATE PROCEDURE spAssignSpecializationsToRegistrar
+@registrar_id INT,
+@specialization_ids NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @xml XML = CONVERT(XML, '<root><id>' + REPLACE(@specialization_ids, ',', '</id><id>') + '</id></root>');
+
+    INSERT INTO registrar_specializations (registrar_id, specialization_id)
+    SELECT @registrar_id, x.n.value('.', 'INT')
+    FROM @xml.nodes('/root/id') AS x(n);
+END;
+

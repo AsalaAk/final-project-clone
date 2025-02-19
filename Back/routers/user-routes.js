@@ -18,6 +18,8 @@ router.get('/ezors', usersController.getUniqueEzors);
 router.get('/person/:id', usersController.getPersonById);
 router.get('/profile/:id', authenticateUser, usersController.getUserProfile);
 router.put('/profile/:id', authenticateUser, usersController.updateUserProfile);
+router.get('/specializations', usersController.getSpecializations);
+router.post('/assign-specializations', usersController.assignSpecializations);
 
 
 

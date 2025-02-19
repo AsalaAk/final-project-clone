@@ -190,6 +190,39 @@ const updateUserProfile = async (req, res) => {
 module.exports.updateUserProfile = updateUserProfile;
 
 
+//==========================Assign Specializations To Registrar=============================
+
+const assignSpecializations = async (req, res) => {
+    try {
+        const { registrarId, specializationIds } = req.body;
+
+        if (!registrarId || !specializationIds || specializationIds.length === 0) {
+            return res.status(400).json({ message: "Invalid input" });
+        }
+
+        await usersRepository.assignSpecializationsToRegistrar(registrarId, specializationIds);
+        res.status(200).json({ message: "Specializations assigned successfully!" });
+    } catch (error) {
+        console.error("Error assigning specializations:", error);
+        res.status(500).json({ message: "Failed to assign specializations" });
+    }
+};
+
+module.exports.assignSpecializations = assignSpecializations;
+
+//==========================Get Specializations=============================
+
+const getSpecializations = async (req, res) => {
+    try {
+        const result = await usersRepository.getSpecializations();
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("Error fetching specializations:", error);
+        res.status(500).json({ message: "Failed to fetch specializations" });
+    }
+};
+
+module.exports.getSpecializations = getSpecializations;
 
 
 
@@ -197,38 +230,5 @@ module.exports.updateUserProfile = updateUserProfile;
 
 
 
-
-
-
-
-
-
-
-
-// //=========================DELETE user==============================
-
-// const deleteUserById = async (req, res) => {
-//     let x = await usersRepository.deleteUsingStoredProcedure(req.params.idOfCustomer);
-//     res.json(x);
-// };
-
-// module.exports.deleteUserById = deleteUserById;
-
-// //=========================UPDATE user==============================
-
-// const updateUser = async (req, res) => {
-//     let x = await usersRepository.updateUser(req.params.id, req.body.fname, req.body.lname, req.body.ezor);
-//     res.json(x);
-// };
-// module.exports.updateUser = updateUser;
-
-// //=========================GET user by id==============================
-
-
-// const getUserById = async (req, res) => {
-//     let x = await usersRepository.getUserById(req.params.id);
-//     res.json(x);
-// };
-// module.exports.getUserById = getUserById;
 
 

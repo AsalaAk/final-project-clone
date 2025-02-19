@@ -95,7 +95,7 @@ const getPersonByIdStoredProcedure = async (id) => {
     try {
         const result = await pool.request()
             .input('id', mssql.Int, id)
-            .query("SELECT id, fname, lname, email, gender, ezor, cardDescription FROM registrars WHERE id = @id");
+            .query("SELECT id, fname, lname, email, gender, ezor, cardDescription, phone FROM registrars WHERE id = @id");
 
         return result.recordset[0]; // Return the first matching user
     } catch (error) {
@@ -157,6 +157,36 @@ const updateUserProfileStoredProcedure = async (id, updates) => {
 };
 module.exports.updateUserProfileStoredProcedure = updateUserProfileStoredProcedure;
 
+//==========================Assign Specializations To Registrar=============================
+const assignSpecializationsToRegistrar = async (registrarId, specializationIds) => {
+    try {
+        const specializationIdsStr = specializationIds.join(','); // Convert array to comma-separated string
+        await appPool.request()
+            .input('registrar_id', mssql.Int, registrarId)
+            .input('specialization_ids', mssql.NVarChar, specializationIdsStr)
+            .execute('spAssignSpecializationsToRegistrar');
+    } catch (error) {
+        console.error("Database error while assigning specializations:", error);
+        throw error;
+    }
+};
+
+module.exports.assignSpecializationsToRegistrar = assignSpecializationsToRegistrar;
+
+
+//==========================Get Specializations=============================
+
+const getSpecializations = async () => {
+    try {
+        const result = await appPool.request().execute('spGetSpecializations'); // Call stored procedure
+        return result.recordset;
+    } catch (error) {
+        console.error("Database error:", error);
+        throw error;
+    }
+};
+
+module.exports.getSpecializations = getSpecializations;
 
 
 
@@ -174,100 +204,3 @@ module.exports.updateUserProfileStoredProcedure = updateUserProfileStoredProcedu
 
 
 
-
-
-
-
-//============================ DELETE user ====================================
-
-// const deleteUsingStoredProcedure = async (theId) => {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             let myConnectionPoolToDB = await appPool.connect()
-//             try {
-//                 let results = await myConnectionPoolToDB.request()
-//                     .input('id', mssql.Int, theId)
-//                     .execute('deleteUserById')
-
-//                 console.log(results);
-//                 resolve(results);
-//             }
-//             catch (err) {
-//                 console.log("there was an error while sending query to DB ", err);
-//                 reject(err);
-//             }
-//         }
-//         catch (err) {
-//             console.error('ERROR CONNECTION TO DB: ', err);
-//             reject('ERROR CONNECTION TO DB: ', err);
-//         }
-//     })
-// }
-
-// module.exports.deleteUsingStoredProcedure = deleteUsingStoredProcedure;
-
-// //============================ UPDATE user ==============================
-
-// const updateUser = async (id, fname, lname, ezor) => {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             let myConnectionPoolToDB = await appPool.connect()
-//             try {
-//                 let results = await myConnectionPoolToDB.request()
-//                     .input('id', mssql.Int, id)
-//                     .input('fname', mssql.VarChar, fname)
-//                     .input('lname', mssql.VarChar, lname)
-//                     .input('ezor', mssql.VarChar, ezor)
-//                     .execute('updateUser')
-
-//                 console.log(results);
-//                 resolve(results);
-//             }
-//             catch (err) {
-//                 console.log("there was an error while sending query to DB ", err);
-//                 reject(err);
-//             }
-//         }
-//         catch (err) {
-//             console.error('ERROR CONNECTION TO DB: ', err);
-//             reject('ERROR CONNECTION TO DB: ', err);
-//         }
-//     })
-// }
-
-// module.exports.updateUser = updateUser;
-
-
-
-// //============================ Get user By Id ==============================
-
-// const getUserById = async (id) => {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             let myConnectionPoolToDB = await appPool.connect()
-//             try {
-//                 let results = await myConnectionPoolToDB.request()
-//                     .input('id', mssql.Int, id)
-//                     .execute('getUserById')
-
-//                 console.log(results);
-//                 resolve(results);
-//             }
-//             catch (err) {
-//                 console.log("there was an error while sending query to DB ", err);
-//                 reject(err);
-//             }
-//         }
-//         catch (err) {
-//             console.error('ERROR CONNECTION TO DB: ', err);
-//             reject('ERROR CONNECTION TO DB: ', err);
-//         }
-//     })
-// }
-
-// module.exports.getUserById = getUserById;
-
-
-
-
-//===========================================================================
