@@ -1,39 +1,129 @@
 .formParent {
-    padding-top: 20px;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.labelStyling {
-    padding-left: 10px;
-
+.formParent h2 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 1.8rem;
 }
 
 .formChildren {
-    padding: 5px;
-
+    margin-bottom: 20px;
 }
 
-.submitButton {
-    padding: 5px;
-    margin-top: 10px;
+.labelStyling {
+    display: block;
+    margin-bottom: 8px;
+    color: #34495e;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.formChildren input,
+.formChildren select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #2c3e50;
+    transition: border-color 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.formChildren input:focus,
+.formChildren select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+}
+
+.formChildren input::placeholder {
+    color: #95a5a6;
 }
 
 .specializations-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
 }
 
 .checkbox-label {
     display: flex;
     align-items: center;
-    gap: 5px;
-    background-color: #f1f1f1;
-    padding: 5px 10px;
-    border-radius: 5px;
+    gap: 8px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.checkbox-label input {
+.checkbox-label:hover {
+    background-color: #f0f4f8;
+    border-color: #3498db;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
     cursor: pointer;
+    accent-color: #3498db;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    background-color: #2980b9;
+}
+
+/* Error message styling */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Success message styling */
+.success-message {
+    color: #27ae60;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .formParent {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .specializations-container {
+        grid-template-columns: 1fr;
+    }
 }

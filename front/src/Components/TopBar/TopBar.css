@@ -11,12 +11,24 @@
 }
 
 .TopBarContainer {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     display: flex;
-    align-content: center;
     justify-content: space-between;
+    align-items: center;
 }
 
-.TopBarContainer {
-    padding: 10px;
-    background-color: rgb(215, 235, 253);
+.TopBarContainer a,
+.TopBarContainer span {
+    color: #5a6c7d;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.TopBarContainer a:hover,
+.TopBarContainer span:hover {
+    color: #3498db;
 }

@@ -1,6 +1,6 @@
 USE ProfessionalsWebDB;
 -------------------------Register User-------------------------
-
+-- DROP PROCEDURE [dbo].[spRegisterUser];
 CREATE PROCEDURE [dbo].[spRegisterUser]
 @fname NVARCHAR(100),
 @lname NVARCHAR(100),
@@ -28,7 +28,7 @@ EXEC [dbo].[spRegisterUser]
    @fname = 'John',
    @lname = 'Doe',
    @phone = '123456789',
-   @email = 'john@example.com',
+   @email = 'johffn@example.com',
    @gender = 'Male',
    @cardDescription = 'Short description',
    @ezor = 'Region 1',
@@ -64,6 +64,8 @@ EXEC [dbo].[spGetUserByEmail]
 
 -- DROP PROCEDURE [dbo].[spGetUserByEmail];
 -------------------------GET All Users-------------------------
+-- DROP PROCEDURE [dbo].[spGetAllUsers];
+-- DROP PROCEDURE [dbo].[spGetPersonById];
 
 CREATE PROCEDURE [dbo].[spGetAllUsers]
 AS
@@ -82,6 +84,8 @@ BEGIN
     WHERE 
         isActive = 1; -- Optional: Include only active registrars
 END;
+
+
 -- DROP PROCEDURE [dbo].[spGetAllUsers];
 EXEC spGetAllUsers;
 ------------------------------------------------------------------
@@ -176,7 +180,6 @@ BEGIN
     SELECT id, specialization_name FROM specializations;
 END;
 
-EXEC spGetSpecializations;
 
 -------------------------Assign Specializations To Registrar-------------------------
 CREATE PROCEDURE spAssignSpecializationsToRegistrar
@@ -192,4 +195,7 @@ BEGIN
     SELECT @registrar_id, x.n.value('.', 'INT')
     FROM @xml.nodes('/root/id') AS x(n);
 END;
+
+-- DROP PROCEDURE [dbo].[spAssignSpecializationsToRegistrar];
+-- DROP PROCEDURE [dbo].[spGetPersonById];
 
