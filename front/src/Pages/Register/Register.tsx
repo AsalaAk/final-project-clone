@@ -5,7 +5,7 @@ import { MyContext } from '../../state/MyContext';
 import { useNavigate } from 'react-router-dom';
 
 export const Register = () => {
-    const { setRegisteringPerson, setIsLoggedIn, setToken, loggedInUserId, setLoggedInUserId, specializations } = useContext(MyContext);
+    const { setRegisteringPerson, setIsLoggedIn, setToken, setLoggedInUserId, specializations } = useContext(MyContext);
     const navigate = useNavigate();
     const [selectedSpecializations, setSelectedSpecializations] = useState<number[]>([]); // Stores selected specialization IDs
 
@@ -70,7 +70,7 @@ export const Register = () => {
                 setToken(data.token);
                 setLoggedInUserId(data.id);
 
-                navigate(`profile/${data.id}`);
+                navigate(`/profile/${data.id}`);
             } else {
                 const errorData = await response.json();
                 setError(errorData.message || "Failed to register. Please try again.");
@@ -150,23 +150,28 @@ export const Register = () => {
                     <div className='formChildren'>
                         <label className='labelStyling'>תחומי התמחות:</label>
                         <div className="specializations-container">
-                            {specializations.map((spec) => (
-                                <label key={spec.id} className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        value={spec.id}
-                                        onChange={(e) => {
-                                            const value = Number(e.target.value);
-                                            setSelectedSpecializations((prev) =>
-                                                prev.includes(value)
-                                                    ? prev.filter((id) => id !== value) // Remove if already selected
-                                                    : [...prev, value] // Add if not selected
-                                            );
-                                        }}
-                                    />
-                                    {spec.specialization_name}
-                                </label>
-                            ))}
+                            {specializations.length > 0 ? (
+                                specializations.map((spec) => (
+                                    <label key={spec.id} className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            value={spec.id}
+                                            onChange={(e) => {
+                                                const value = Number(e.target.value);
+                                                setSelectedSpecializations((prev) =>
+                                                    prev.includes(value)
+                                                        ? prev.filter((id) => id !== value)
+                                                        : [...prev, value]
+                                                );
+                                            }}
+                                            checked={selectedSpecializations.includes(spec.id)}
+                                        />
+                                        {spec.specialization_name}
+                                    </label>
+                                ))
+                            ) : (
+                                <p>Loading specializations...</p> // Temporary UI to prevent errors
+                            )}
                         </div>
                     </div>
 

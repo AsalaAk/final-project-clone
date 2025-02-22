@@ -8,9 +8,11 @@ require('dotenv').config();
 const registerNewUser = async (req, res) => {
     try {
         const userData = req.body;
+        console.log("Received Registration Data:", userData);
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(userData.password, 12);
+        if (!userData.fname || !userData.lname || !userData.email || !userData.password) {
+            return res.status(400).json({ message: "Missing required fields." });
+        }
 
         // Check if the user already exists
         const userExists = await usersRepository.checkIfUserExists(userData.email);
@@ -18,14 +20,24 @@ const registerNewUser = async (req, res) => {
             return res.status(400).send("User with this email already exists.");
         }
 
-        // Include hashed password in user data
-        userData.hashed_password = hashedPassword; // Correct the variable name
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(userData.password, 12);
+        // Include hashed password in user data. Assign the hashed password
+        userData.hashed_password = hashedPassword;
 
         // Call repository to register user
         const result = await usersRepository.registerUserStoredProcedure(userData);
 
         if (!result || !result.id) {
             return res.status(500).send("Failed to register user. User ID not returned.");
+        }
+
+        // Assign specializations if provided
+        if (userData.specializations && userData.specializations.length > 0) {
+            console.log("Assigning specializations:", userData.specializations);
+            await usersRepository.assignSpecializationsToRegistrar(result.id, userData.specializations);
+        } else {
+            console.log("No specializations received.");
         }
 
         // Generate JWT token
@@ -123,12 +135,18 @@ module.exports.getUniqueEzors = getUniqueEzors;
 //==========================Get Person By Id=============================
 
 const getPersonById = async (req, res) => {
-    const { id } = req.params;
+    // const { id } = req.params;
     try {
+        const { id } = req.params;
+        console.log(`Fetching user info for ID: ${id}`);
+
+        // Fetch user info including specializations
         const person = await usersRepository.getPersonByIdStoredProcedure(id);
+
         if (!person) {
             return res.status(404).json({ message: 'Person not found' });
         }
+        console.log("Fetched person data:", person);
         res.status(200).json(person);
     } catch (error) {
         console.error('Error fetching person by ID:', error);

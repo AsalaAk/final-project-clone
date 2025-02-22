@@ -12,7 +12,6 @@ type UserInfo = {
     cardDescription: string;
 };
 
-
 const Profile = () => {
     const { token, loggedInUserId } = useContext(MyContext);
     const { id } = useParams();

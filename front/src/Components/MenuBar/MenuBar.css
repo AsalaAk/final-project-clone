@@ -1,20 +1,32 @@
 .menuBarDivParent {
     display: flex;
-    align-items: right;
-    gap: 20px;
+    align-items: center;
+    padding: 20px 30px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eaeaea;
 }
 
 img {
-    width: 50px;
+    width: 60px;
+    height: auto;
 }
 
 .menuBarLinks {
-    align-self: center;
     display: flex;
-    gap: 20px;
-    color: black;
+    gap: 30px;
+    margin-right: 40px;
 }
 
-.menuBarLinks :hover {
-    color: red;
+.menuBarLinks a {
+    color: #34495e;
+    font-weight: 500;
+    font-size: 1.1rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.menuBarLinks a:hover {
+    background-color: #f7f9fc;
+    color: #3498db;
 }
